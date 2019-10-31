@@ -1,0 +1,120 @@
+drop table IF EXISTS `test`;
+create table `test` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`content` varchar(32) comment '记录内容',
+	`gmt_create` datetime NOT NULL,
+	`gmt_modified` datetime NOT NULL,
+	PRIMARY KEY  (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 人员
+drop table IF EXISTS `member`;
+create table `member` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `name` varchar(32) COMMENT '姓名',
+    `nickname` varchar(32) COMMENT '昵称',
+    `sex` tinyint COMMENT '性别:0-男性，1-女性',
+    `id_type` varchar(2) COMMENT '证件类别：00-身份证,01-护照',
+    `id_number` varchar(32) COMMENT '证件号码',
+    `phone` varchar(32) COMMENT '手机号',
+    `email` varchar(32) COMMENT '邮箱',
+    `linkman_name` varchar(32) COMMENT '联系人姓名',
+    `linkman_phone` varchar(32) COMMENT '联系人手机号',
+    `status` tinyint DEFAULT 0 COMMENT '状态：0-未激活，1-激活，2-锁定，3-冻结',
+    `is_deleted` tinyint DEFAULT 0 COMMENT '状态：1-删除，0-未删除',
+    `gmt_create` datetime  NOT NULL,
+    `gmt_modified` datetime NOT NULL,
+    PRIMARY KEY  (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '人员基本信息';
+CREATE INDEX idx_name ON `member` (name);
+CREATE UNIQUE INDEX uqx_id ON `member` (id_type, id_number);
+CREATE UNIQUE INDEX uqx_phone ON `member` (phone);
+
+--会员密码
+drop table IF EXISTS `member_passwd`;
+create table `member_passwd` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `member_id` int(11) COMMENT '会员id，ref member：id',
+    `passwd` varchar(128) COMMENT 'md5 密码',
+    `status` tinyint COMMENT '状态：0-使用中，1-锁定,连续出错5次锁定',
+    `times` tinyint COMMENT '出错次数',
+    `lock_time` datetime COMMENT '最后一次锁定时间，锁定状态下间隔时间内不能登录',
+    `salt` varchar(32) COMMENT 'md5用盐',
+    `gmt_create` datetime NOT NULL,
+    `gmt_modified` datetime NOT NULL,
+    PRIMARY KEY  (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '会员密码';
+CREATE UNIQUE INDEX uqx_member_id ON `member_passwd` (member_id);
+
+--会员画像
+create table `member_profile` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `member_id` varchar(32) COMMENT '会员id，ref member：id',
+    `rank` varchar(2) COMMENT '军衔：00-士兵，01-  11-',
+    `reward_point` varchar(32) COMMENT '奖励积分',
+    `gmt_create` date NOT NULL,
+    `gmt_modified` date NOT NULL,
+    PRIMARY KEY  (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--会员装备关系表
+create table `member_equipment` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `member_id` varchar(32) COMMENT '会员id，ref member：id',
+    `equipment_id` varchar(32) COMMENT '装备id，ref member：id',
+    `gmt_create` date NOT NULL,
+    `gmt_modified` date NOT NULL,
+    PRIMARY KEY  (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--战队
+create table `team` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `name` varchar(32) COMMENT '战队名称',
+
+    `is_deleted` varchar(1) DEFAULT 0 COMMENT '状态：1-删除，0-未删除',
+    `gmt_create` date NOT NULL,
+    `gmt_modified` date NOT NULL,
+    PRIMARY KEY  (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--战队成员
+create table `team` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `team_id` varchar(32) COMMENT '战队id',
+    `team_id` varchar(32) COMMENT '战队id',
+
+    `is_deleted` varchar(1) DEFAULT 0 COMMENT '状态：1-删除，0-未删除',
+    `gmt_create` date NOT NULL,
+    `gmt_modified` date NOT NULL,
+    PRIMARY KEY  (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+==============================================================================
+--装备表
+create table `equipment` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `type` varchar(1) COMMENT '装备类型',
+    `name` varchar(32) COMMENT '名称',
+    `status` varchar(1) COMMENT '状态：0-已购买，1-使用中，可用',
+    `is_deleted` varchar(1) DEFAULT 0 COMMENT '状态：1-删除，0-未删除',
+    `gmt_create` date NOT NULL,
+    `gmt_modified` date NOT NULL,
+    PRIMARY KEY  (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+-- 后端操作人
+create table `operator` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+    `name` varchar(32) COMMENT '姓名',
+    `phone` varchar(32) COMMENT '手机号',
+    `email` varchar(32) COMMENT '邮箱',
+    `passwd` varchar(32) COMMENT 'md5 密码',
+    `is_deleted` varchar(1) DEFAULT 0 COMMENT '状态：1-删除，0-未删除',
+	`gmt_create` date NOT NULL,
+    `gmt_modified` date NOT NULL,
+	PRIMARY KEY  (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
