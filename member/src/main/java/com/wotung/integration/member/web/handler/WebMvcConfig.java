@@ -1,6 +1,5 @@
-package com.wotung.integration.member;
+package com.wotung.integration.member.web.handler;
 
-import com.wotung.integration.member.web.ElapseHandlerInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -16,6 +15,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Autowired
     ElapseHandlerInterceptor elapseHandlerInterceptor;
+    @Autowired
+    ParameterInterceptor parameterInterceptor;
 
 //    // 跨域问题　https://www.cnblogs.com/yuansc/p/9076604.html
 //    @Override
@@ -29,7 +30,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        // 添加自定义记录日志的拦截器
+        // 添加自定义记录日志的拦截器 调用按顺序
         registry.addInterceptor(elapseHandlerInterceptor);
+        registry.addInterceptor(parameterInterceptor);
     }
 }

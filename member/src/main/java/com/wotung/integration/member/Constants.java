@@ -17,6 +17,12 @@ public class Constants {
 
     public static final String CLASSPATH_MAPPER_XML =  "classpath:mapper/*.xml";
 
+    public static final String SERVICE_NAME = "member";
     public static final String APP_ID = "civil_military";
     public static final String APP_SECRET = "member@wotung.com";
+    // 超时时间 1min
+    public static final Long EXP_TTL_Millis = 1 * 60 * 1000L;
+    // 刷新token时间
+    public static final Long Refresh_TTL_Millis = 2 * 60 * 1000L;
+
 }

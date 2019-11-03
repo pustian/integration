@@ -164,4 +164,12 @@ public class LoginDomainImpl implements ILoginDomain {
         }
         return result;
     }
+
+    public Boolean updateMember(Member member) {
+        boolean result = false;
+        if(null == member.getId() ) {
+            result = memberService.updateById(member);
+        }
+        return result;
+    }
 }

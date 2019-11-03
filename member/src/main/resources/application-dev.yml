@@ -22,5 +22,6 @@ member:
   login:
     # 6min
     lockInterval: 2
-    # 允许连续错误输入密码次数,3次错误输入锁定。必须>0
-    allowedErrorTime: 3
+#    # 允许连续错误输入密码次数,3次错误输入锁定。必须>0
+#    allowedErrorTime: 3
+

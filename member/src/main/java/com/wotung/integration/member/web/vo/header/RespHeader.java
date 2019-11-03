@@ -5,6 +5,7 @@ package com.wotung.integration.member.web.vo.header;
 
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 public class RespHeader implements Serializable {
@@ -18,6 +19,7 @@ public class RespHeader implements Serializable {
 	@ApiModelProperty(value = "响应描述", required = true)
 	private String respMessage;
 	@ApiModelProperty(value = "响应更新token")
+	@NotNull
 	private String token;
 
 	public String getReqId() {

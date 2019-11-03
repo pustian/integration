@@ -5,6 +5,7 @@ package com.wotung.integration.member.web.vo.header;
 
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 public final class ReqHeader implements Serializable {
@@ -19,6 +20,7 @@ public final class ReqHeader implements Serializable {
     private String reqId;
 
     @ApiModelProperty(value = "访问请求token")
+    @NotNull
     private String accessToken;
 
     public String getEntityId() {

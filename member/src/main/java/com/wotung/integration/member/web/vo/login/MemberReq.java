@@ -4,6 +4,10 @@ import com.wotung.integration.member.web.vo.entity.ReqEntity;
 
 public final class MemberReq implements ReqEntity {
     /**
+     *
+     */
+    private Integer id;
+    /**
      * 姓名
      */
     private String name;
@@ -39,6 +43,14 @@ public final class MemberReq implements ReqEntity {
      * 联系人手机号
      */
     private String linkmanPhone;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

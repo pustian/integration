@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 public class MemberLoginProperties {
     private int lockInterval;
     private int allowedErrorTime;
+//    public long ttlMillis;
 
     public int getLockInterval() {
         return lockInterval;
@@ -24,4 +25,12 @@ public class MemberLoginProperties {
     public void setAllowedErrorTime(int allowedErrorTime) {
         this.allowedErrorTime = allowedErrorTime;
     }
+
+//    public long getTtlMillis() {
+//        return ttlMillis;
+//    }
+//
+//    public void setTtlMillis(long ttlMillis) {
+//        this.ttlMillis = ttlMillis;
+//    }
 }
