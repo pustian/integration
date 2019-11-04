@@ -1,7 +1,7 @@
 <?mapper version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="10 seconds">
     <property name="LOG_HOME" value="/tmp/logs"/>
-    <property name="APP_NAME" value="lingang-screenapi"/>
+    <property name="APP_NAME" value="member"/>
     <property name="LOG_MAX_HISTORY" value="30"/>
     <property name="LOG_APP_HOME" value="${LOG_HOME}/app"/>
     <property name="LOG_SYS_HOME" value="${LOG_HOME}/sys"/>
@@ -30,41 +30,41 @@
     </appender>
     <!-- 数据库日志输出、业务日志输出 -->
     <springProfile name="default">
-        <logger name="cc.globalbuy.b2b.lee2111.lingang" level="DEBUG" additivity="false">
+        <logger name="com.wotung.integration.member" level="DEBUG" additivity="false">
             <appender-ref ref="STDOUT"/>
             <appender-ref ref="APP"/>
         </logger>
     </springProfile>
 
     <springProfile name="dev">
-        <logger name="cc.globalbuy.b2b.lee2111.lingang" level="DEBUG" additivity="false">
+        <logger name="com.wotung.integration.member" level="DEBUG" additivity="false">
             <appender-ref ref="STDOUT"/>
             <appender-ref ref="APP"/>
         </logger>
     </springProfile>
 
     <springProfile name="aliyun">
-        <logger name="cc.globalbuy.b2b.lee2111.lingang" level="debug" additivity="false">
+        <logger name="com.wotung.integration.member" level="debug" additivity="false">
             <appender-ref ref="STDOUT"/>
             <appender-ref ref="APP"/>
         </logger>
     </springProfile>
 
     <springProfile name="sit">
-        <logger name="cc.globalbuy.b2b.lee2111.lingang" level="INFO" additivity="false">
+        <logger name="com.wotung.integration.member" level="INFO" additivity="false">
             <appender-ref ref="STDOUT"/>
             <appender-ref ref="APP"/>
         </logger>
     </springProfile>
     <springProfile name="uat">
-        <logger name="cc.globalbuy.b2b.lee2111.lingang" level="INFO" additivity="false">
+        <logger name="com.wotung.integration.member" level="INFO" additivity="false">
             <appender-ref ref="STDOUT"/>
             <appender-ref ref="APP"/>
         </logger>
     </springProfile>
 
     <springProfile name="aliyun-prod">
-        <logger name="cc.globalbuy.b2b.lee2111.lingang" level="INFO" additivity="false">
+        <logger name="com.wotung.integration.member" level="INFO" additivity="false">
             <appender-ref ref="STDOUT"/>
             <appender-ref ref="APP"/>
         </logger>
@@ -72,7 +72,8 @@
 
     <logger name="org" level="INFO"/>
     <logger name="javax" level="INFO"/>
-    <root level="INFO">
+    <logger name="com.wotung.integration.member.mapper" level="DEBUG" />
+    <root level="DEBUG">
         <appender-ref ref="STDOUT"/>
 <!--        <appender-ref ref="SYS"/>-->
     </root>

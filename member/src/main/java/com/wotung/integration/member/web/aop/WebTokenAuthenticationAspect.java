@@ -1,8 +1,15 @@
 package com.wotung.integration.member.web.aop;
 
+import com.wotung.integration.member.Constants;
+import com.wotung.integration.member.uitl.JWTHelper;
+import com.wotung.integration.member.web.ResponseCode;
 import com.wotung.integration.member.web.vo.Request;
+import com.wotung.integration.member.web.vo.Response;
 import com.wotung.integration.member.web.vo.entity.ReqEntity;
 import com.wotung.integration.member.web.vo.header.ReqHeader;
+import com.wotung.integration.member.web.vo.header.RespHeader;
+import io.jsonwebtoken.*;
+import org.apache.commons.lang.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -12,10 +19,14 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
+import java.util.ResourceBundle;
 
+@Profile("sit")
 @Component
 @Aspect
 public class WebTokenAuthenticationAspect {
@@ -46,26 +57,48 @@ public class WebTokenAuthenticationAspect {
         //判断注解标识如果不为false则，进行登录
         Class<?> aClass = pjp.getTarget().getClass(); //先获取被织入增强处理的目标对象，再获取目标类的clazz
         String methodName = pjp.getSignature().getName(); //先获取目标方法的签名，再获取目标方法的名
-        logger.info("methodName: "+methodName);  // 输出目标方法名
+//        logger.info("methodName: "+methodName);  // 输出目标方法名
         Class[] parameterTypes = ((MethodSignature) pjp.getSignature()).getParameterTypes(); //获取目标方法参数类型
         Object[] args = pjp.getArgs();  //获取目标方法的入参
-        for (int i = 0; i < args.length; i++) {
-            logger.info("argsName: "+args[i]); //输出目标方法的参数
+        if(args[0] instanceof Request) {
+            Request request = (Request)args[0];
+            if(request != null) {
+                ReqHeader reqHeader = request.getReqHeader();
+                if( reqHeader != null) {
+                    if(StringUtils.isNotBlank(reqHeader.getAccessToken())) {
+                        Response response = new Response();
+                        RespHeader respHeader = new RespHeader();;
+                        try {
+                            // JWTHelper 解析
+                            Claims claims = JWTHelper.parseJWT(reqHeader.getAccessToken() );
+                            if(null != claims.getId() && StringUtils.isNotBlank(claims.getSubject())
+                                    && Constants.SERVICE_NAME.equals(claims.getIssuer()) ) {
+                                Object proceed = pjp.proceed();
+                                response = (Response)proceed;
+                                if(null != response.getRespHeader() ) {
+                                    respHeader =  response.getRespHeader();
+                                }
+                                respHeader.setRespCode(ResponseCode.OK.code);
+                                respHeader.setRespMessage(ResponseCode.OK.message);
+                            }
+                        } catch (ExpiredJwtException | UnsupportedJwtException |MalformedJwtException| SignatureException| IllegalArgumentException ex) {
+                            logger.error("", ex);
+                            respHeader.setRespCode(ResponseCode.TOKEN_ERROR.code);
+                            respHeader.setRespMessage(ResponseCode.TOKEN_ERROR.message);
+                        } catch (Throwable throwable) {
+                            logger.error("", throwable);
+                            respHeader.setRespCode(ResponseCode.SYSTEM_ERROR.code);
+                            respHeader.setRespMessage(ResponseCode.SYSTEM_ERROR.message);
+                        } finally {
+                            respHeader.setReqId(reqHeader.getReqId());
+                            respHeader.setSessionId(reqHeader.getSessionId());
+                            response.setRespHeader(respHeader);
+                            return response;
+                        }
+                    };
+                }
+            }
         }
-        try {
-            Method method = aClass.getMethod(methodName, parameterTypes);  //获取目标方法
-//            AssertOK annotation = method.getAnnotation(AssertOK.class);  //获取方法上的注解
-//            annotation.isLogin();  //获取注解函数值
-            long starttime = System.currentTimeMillis();
-            Object proceed = pjp.proceed();  //执行目标方法
-            long exctime = System.currentTimeMillis() - starttime;
-            logger.info("执行时间："+exctime + "毫秒");
-            logger.info("proceed: "+proceed);  //打印目标方法的return结果
-            return proceed;
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-        }
-//        return "aop的返回值";
         return null;
     }
 

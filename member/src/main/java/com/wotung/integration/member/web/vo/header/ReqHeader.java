@@ -18,6 +18,8 @@ public final class ReqHeader implements Serializable {
     private String sessionId;
     @ApiModelProperty(value = "请求的唯一流水号")
     private String reqId;
+//    @ApiModelProperty(value = "请求的调用步骤")
+//    private String reqStep;
 
     @ApiModelProperty(value = "访问请求token")
     @NotNull
