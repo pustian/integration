@@ -58,6 +58,12 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.penggle</groupId>
+            <artifactId>kaptcha</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+
         <!-- 在线文档 swagger-ui2 begin-->
         <dependency>
             <groupId>io.springfox</groupId>

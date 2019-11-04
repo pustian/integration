@@ -7,7 +7,6 @@ import com.wotung.integration.member.properties.MemberLoginProperties;
 import com.wotung.integration.member.service.IMemberPasswdService;
 import com.wotung.integration.member.service.IMemberService;
 import com.wotung.integration.member.uitl.JWTHelper;
-import com.wotung.integration.member.uitl.TokenCheck;
 import com.wotung.integration.member.web.vo.DefaultRespEntity;
 import com.wotung.integration.member.web.vo.Request;
 import com.wotung.integration.member.web.vo.Response;
@@ -21,7 +20,6 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.InvocationTargetException;
@@ -165,7 +163,6 @@ public class LoginController {
 //    })
     @PostMapping("/updateMember")
     @ResponseBody
-    @TokenCheck
     public  Response<DefaultRespEntity> updateMember(
             @RequestBody Request<MemberReq> reqMember
             ) {

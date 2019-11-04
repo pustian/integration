@@ -12,12 +12,4 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 
-//    @Bean
-//    public RestTemplate restTemplate() {
-//        SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
-//        requestFactory.setConnectTimeout(30000); // 30秒
-//        requestFactory.setReadTimeout(30000);    //
-//        RestTemplate restTemplate = new RestTemplate(requestFactory);
-//        return restTemplate;
-//    }
 }
