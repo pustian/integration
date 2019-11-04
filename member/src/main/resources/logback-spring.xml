@@ -41,7 +41,12 @@
             <appender-ref ref="STDOUT"/>
             <appender-ref ref="APP"/>
         </logger>
-    </springProfile>
+        <!-- SQL 日志-->
+        <logger name="com.wotung.integration.member.mapper" level="DEBUG" additivity="false">
+            <appender-ref ref="STDOUT"/>
+        </logger>
+
+</springProfile>
 
     <springProfile name="aliyun">
         <logger name="com.wotung.integration.member" level="debug" additivity="false">
@@ -72,7 +77,6 @@
 
     <logger name="org" level="INFO"/>
     <logger name="javax" level="INFO"/>
-    <logger name="com.wotung.integration.member.mapper" level="DEBUG" />
     <root level="DEBUG">
         <appender-ref ref="STDOUT"/>
 <!--        <appender-ref ref="SYS"/>-->

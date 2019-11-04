@@ -27,7 +27,8 @@ import org.springframework.web.bind.annotation.*;
 import java.lang.reflect.InvocationTargetException;
 
 @Api(tags = "用户注册登录")
-@Controller("/v1")
+@RestController
+@RequestMapping("/v1")
 public class LoginController {
     private final static Logger logger = LoggerFactory.getLogger(Thread.currentThread().getStackTrace()[1].getClassName());
 
