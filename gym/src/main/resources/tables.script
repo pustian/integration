@@ -1,0 +1,14 @@
+
+-- 场地
+drop table IF EXISTS `gym`;
+create table `gym` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `name` varchar(32) COMMENT '场馆名字',
+    `address` varchar(200) COMMENT '场馆地址',
+    `contact_info` varchar(32) COMMENT '联系方式',
+    PRIMARY KEY  (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '场地基本信息';
+
+
+
+
