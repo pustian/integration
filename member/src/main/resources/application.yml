@@ -6,9 +6,9 @@ server:
     max-threads: 500
     max-connections: 20000
   # 对外提供的http超时时间设置
-
 spring:
   profiles:
     active: dev
   application:
     name: member
+

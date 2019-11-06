@@ -26,7 +26,7 @@ import java.lang.reflect.InvocationTargetException;
 
 @Api(tags = "用户注册登录")
 @RestController
-@RequestMapping("/v1")
+@RequestMapping("/api/v1")
 public class LoginController {
     private final static Logger logger = LoggerFactory.getLogger(Thread.currentThread().getStackTrace()[1].getClassName());
 

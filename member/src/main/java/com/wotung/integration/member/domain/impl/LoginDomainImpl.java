@@ -7,14 +7,12 @@ import com.wotung.integration.member.entity.MemberPasswd;
 import com.wotung.integration.member.properties.MemberLoginProperties;
 import com.wotung.integration.member.service.IMemberPasswdService;
 import com.wotung.integration.member.service.IMemberService;
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 
 @Service
