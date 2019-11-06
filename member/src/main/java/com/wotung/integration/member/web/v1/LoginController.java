@@ -43,16 +43,18 @@ public class LoginController {
 
     @ApiOperation(value = "注册", notes = "注册:返回字段中status 0：未激活，需要用户重新注册。")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "phone", value = "手机号", dataType = "String", paramType = "form")
+            @ApiImplicitParam(name = "phone", value = "手机号", dataType = "String", paramType = "form"),
+            @ApiImplicitParam(name = "name", value = "用户名", dataType = "String", paramType = "form")
     })
     @PostMapping("/register")
     @ResponseBody
     public Response<DefaultRespEntity> register(
-            @RequestParam(name = "phone")String phone
+            @RequestParam(name = "phone")String phone,
+            @RequestParam(name = "name")String name
     ) {
         Response<DefaultRespEntity> response = new Response<DefaultRespEntity>();
         DefaultRespEntity defaultRespEntity = new DefaultRespEntity();
-        boolean  bool = loginDomain.register(phone);
+        boolean  bool = loginDomain.register(phone, name);
         defaultRespEntity.setIsSuccess(""+bool);
         response.setRespBody(defaultRespEntity);
         return response;

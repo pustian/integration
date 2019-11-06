@@ -29,10 +29,11 @@ public class LoginDomainImpl implements ILoginDomain {
     MemberLoginProperties memberLoginProperties;
 
     @Override
-    public Boolean register(String phone) {
+    public Boolean register(String phone, String name) {
         Boolean result = false;
         Member member = new Member();
         member.setPhone(phone);
+        member.setName(name);
         Member selected = memberService.selectOne(new EntityWrapper<Member>(member));
         if(null == selected) {
             member.setGmtCreate(new Date());
