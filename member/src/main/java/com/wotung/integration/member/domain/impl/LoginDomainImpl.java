@@ -7,6 +7,7 @@ import com.wotung.integration.member.entity.MemberPasswd;
 import com.wotung.integration.member.properties.MemberLoginProperties;
 import com.wotung.integration.member.service.IMemberPasswdService;
 import com.wotung.integration.member.service.IMemberService;
+import com.wotung.integration.member.web.ResponseCode;
 import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,27 +29,61 @@ public class LoginDomainImpl implements ILoginDomain {
     @Autowired
     MemberLoginProperties memberLoginProperties;
 
+//    @Override
+//    public Boolean register(String phone, String name) {
+//        Boolean result = false;
+//        Member member = new Member();
+//        member.setPhone(phone);
+//        Member selected = memberService.selectOne(new EntityWrapper<Member>(member));
+//        if(null == selected) {
+//            member.setName(name);
+//            member.setGmtCreate(new Date());
+//            member.setGmtModified(new Date());
+//            result = memberService.insert(member);
+////        } else {
+////            try {
+////                BeanUtils.copyProperties(member, selected);
+////            } catch (IllegalAccessException e) {
+////                logger.error("The phone has registered, return exception", e);
+////            } catch (InvocationTargetException e) {
+////                logger.error("The phone has registered, return exception", e);
+////            }
+//        } else {
+//            result = true;
+//        }
+//        return result;
+//    }
+
     @Override
-    public Boolean register(String phone, String name) {
-        Boolean result = false;
-        Member member = new Member();
-        member.setPhone(phone);
-        member.setName(name);
-        Member selected = memberService.selectOne(new EntityWrapper<Member>(member));
-        if(null == selected) {
+    public ResponseCode register2(String phone, String name, String email, String passwd) {
+        ResponseCode result = ResponseCode.SYSTEM_ERROR;
+        // 1 检查手机号是否已注册。
+        Member selected = memberService.selectOne(new EntityWrapper<Member>().eq("phone", phone));
+        if(null == selected ) {
+            Member member = new Member();
+            member.setPhone(phone);
+            member.setName(name);
+            member.setEmail(email);
             member.setGmtCreate(new Date());
             member.setGmtModified(new Date());
-            result = memberService.insert(member);
-//        } else {
-//            try {
-//                BeanUtils.copyProperties(member, selected);
-//            } catch (IllegalAccessException e) {
-//                logger.error("The phone has registered, return exception", e);
-//            } catch (InvocationTargetException e) {
-//                logger.error("The phone has registered, return exception", e);
-//            }
+            boolean memberInsert = memberService.insert(member);
+
+            selected = memberService.selectOne(new EntityWrapper<Member>().eq("phone", phone));
+            MemberPasswd memberPasswd = new MemberPasswd();
+            memberPasswd.setMemberId(selected.getId());
+            memberPasswd.setPasswd(passwd);
+            memberPasswd.setStatus(0);
+            memberPasswd.setTimes(0);
+            memberPasswd.setLockTime(null);
+            memberPasswd.setSalt(null);
+            memberPasswd.setGmtCreate(new Date());
+            memberPasswd.setGmtModified(new Date());
+            boolean memberPasswdInsert = memberPasswdService.insert(memberPasswd);
+            if(memberInsert && memberPasswdInsert) {
+                result = ResponseCode.OK;
+            }
         } else {
-            result = true;
+            result = ResponseCode.REGISTER_ERROR;
         }
         return result;
     }
@@ -128,46 +163,68 @@ public class LoginDomainImpl implements ILoginDomain {
     }
 
     @Override
-    public Boolean passwdLogin(String phone, String passwd) {
+    public ResponseCode passwdLogin(String phone, String passwd) {
         logger.error("需要跟前端加密为密文传输 phone={} passwd={}", phone, passwd);
         // REDIS IP黑名单防止 刷密码
         // TODO
-
-        Member member = new Member();
-        member.setPhone(phone);
-        Member selected = memberService.selectOne(new EntityWrapper<Member>(member));
-        boolean result = false;
+        ResponseCode result = ResponseCode.SYSTEM_ERROR;
+        Member selected = memberService.selectOne(new EntityWrapper<Member>().eq("phone", phone));
         if(null != selected ) {
             MemberPasswd clause = new MemberPasswd();
             clause.setMemberId(selected.getId());
             MemberPasswd memberPasswd = memberPasswdService.selectOne(new EntityWrapper<MemberPasswd>(clause));
 
             // 正常 或是 锁定状态，间隔时间已到达，重新登陆
-            if(0 == memberPasswd.getStatus()|| ( 1 == memberPasswd.getStatus() && DateUtils.addMinutes(
-                    memberPasswd.getLockTime(), memberLoginProperties.getLockInterval()).getTime() > System.currentTimeMillis() ) ) {
-                if(passwd.equals(memberPasswd.getPasswd() ) ) {
-                    result = true;
+            if(0 == memberPasswd.getStatus() ) {
+                if (passwd.equals(memberPasswd.getPasswd())) {
+                    result = ResponseCode.OK;
                 } else {
-                    // 超过5次锁定，锁定后
-                    int count = memberPasswd.getTimes();
-                    if (count < memberLoginProperties.getAllowedErrorTime() ) {
-                        memberPasswd.setTimes(++count);
-                    } else {
-                        memberPasswd.setLockTime(new Date());
-                        memberPasswd.setStatus(1);
-                    }
-                    memberPasswd.setGmtModified(new Date());
-                    memberPasswdService.updateById(memberPasswd);
+                    result = ResponseCode.LOGIN_FAILED;
                 }
             }
+
+//                } else {
+//                    // 超过5次锁定，锁定后
+//                    int count = memberPasswd.getTimes();
+//                    if (count < memberLoginProperties.getAllowedErrorTime() ) {
+//                        memberPasswd.setTimes(++count);
+//                    } else {
+//                        memberPasswd.setLockTime(new Date());
+//                        memberPasswd.setStatus(1);
+//                    }
+//                    memberPasswd.setGmtModified(new Date());
+//                    memberPasswdService.updateById(memberPasswd);
+//                }
+//            } else {
+//                if(1 == memberPasswd.getStatus() && null != memberPasswd.getLockTime() ) {
+//                    Date allowLoginTime = DateUtils.addMinutes(memberPasswd.getLockTime(), memberLoginProperties.getLockInterval());
+//                    if(allowLoginTime.getTime() > System.currentTimeMillis()  ) {
+//                        if(passwd.equals(memberPasswd.getPasswd() ) ) {
+//                            result = true;
+//                            memberPasswd.setStatus(0);
+//                            memberPasswd.setLockTime(null);
+//                        } else {
+//                            memberPasswd.setLockTime(new Date());
+//                            memberPasswd.setStatus(1);
+//                        }
+//                        memberPasswd.setGmtModified(new Date());
+//                        memberPasswdService.updateById(memberPasswd);
+//                    }
+//                }
+//            }
         }
         return result;
     }
 
-    public Boolean updateMember(Member member) {
-        boolean result = false;
-        if(null != member.getId() ) {
-            result = memberService.updateById(member);
+    public ResponseCode updateMember(Member member) {
+        ResponseCode result = ResponseCode.SYSTEM_ERROR;
+        if(null == member.getId() && null != member.getPhone() ) {
+            Member selected = memberService.selectOne(new EntityWrapper<Member>().eq("phone", member.getPhone()));
+            member.setId(selected.getId());
+        }
+        boolean bool = memberService.updateById(member);
+        if(bool) {
+            result = ResponseCode.OK;
         }
         return result;
     }

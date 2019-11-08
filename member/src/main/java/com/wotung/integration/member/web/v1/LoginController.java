@@ -7,6 +7,7 @@ import com.wotung.integration.member.properties.MemberLoginProperties;
 import com.wotung.integration.member.service.IMemberPasswdService;
 import com.wotung.integration.member.service.IMemberService;
 import com.wotung.integration.member.uitl.JWTHelper;
+import com.wotung.integration.member.web.ResponseCode;
 import com.wotung.integration.member.web.vo.DefaultRespEntity;
 import com.wotung.integration.member.web.vo.Request;
 import com.wotung.integration.member.web.vo.Response;
@@ -41,24 +42,52 @@ public class LoginController {
     @Autowired
     MemberLoginProperties memberLoginProperties;
 
-    @ApiOperation(value = "注册", notes = "注册:返回字段中status 0：未激活，需要用户重新注册。")
+//    @ApiOperation(value = "注册", notes = "注册:返回字段中status 0：未激活，需要用户重新注册。")
+//    @ApiImplicitParams({
+//            @ApiImplicitParam(name = "phone", value = "手机号", dataType = "String", paramType = "form"),
+//            @ApiImplicitParam(name = "name", value = "用户名", dataType = "String", paramType = "form")
+//    })
+//    @PostMapping("/register")
+//    @ResponseBody
+//    public Response<DefaultRespEntity> register(
+//            @RequestParam(name = "phone")String phone,
+//            @RequestParam(name = "name")String name
+//    ) {
+//        Response<DefaultRespEntity> response = new Response<DefaultRespEntity>();
+//        DefaultRespEntity defaultRespEntity = new DefaultRespEntity();
+//        boolean  bool = loginDomain.register(phone, name);
+//        defaultRespEntity.setIsSuccess(""+bool);
+//        response.setRespBody(defaultRespEntity);
+//        return response;
+//    }
+
+    @ApiOperation(value = "注册设置密码", notes = "注册:返回字段中status 0：未激活，需要用户重新注册。")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "phone", value = "手机号", dataType = "String", paramType = "form"),
-            @ApiImplicitParam(name = "name", value = "用户名", dataType = "String", paramType = "form")
+            @ApiImplicitParam(name = "name", value = "用户名", dataType = "String", paramType = "form"),
+            @ApiImplicitParam(name = "email", value = "邮箱", dataType = "String", paramType = "form"),
+            @ApiImplicitParam(name = "passwd", value = "密码", dataType = "String", paramType = "form"),
     })
-    @PostMapping("/register")
+    @PostMapping("/register2")
     @ResponseBody
-    public Response<DefaultRespEntity> register(
+    public Response<DefaultRespEntity> register2(
             @RequestParam(name = "phone")String phone,
-            @RequestParam(name = "name")String name
+            @RequestParam(name = "name")String name,
+            @RequestParam(name = "email")String email,
+            @RequestParam(name = "passwd")String passwd
     ) {
         Response<DefaultRespEntity> response = new Response<DefaultRespEntity>();
         DefaultRespEntity defaultRespEntity = new DefaultRespEntity();
-        boolean  bool = loginDomain.register(phone, name);
-        defaultRespEntity.setIsSuccess(""+bool);
+        ResponseCode register2Reult = loginDomain.register2(phone, name, email, passwd);
+        defaultRespEntity.setIsSuccess("" + (ResponseCode.OK == register2Reult));
         response.setRespBody(defaultRespEntity);
+        RespHeader respHeader = new RespHeader();
+        respHeader.setRespCode(register2Reult.code);
+        respHeader.setRespMessage(register2Reult.message);
+        response.setRespHeader(respHeader);
         return response;
     }
+
 
     @ApiOperation(value = "验证码登录", notes = "TODO 登录：手机号验证码登录")
     @ApiImplicitParams({
@@ -136,16 +165,15 @@ public class LoginController {
     ) {
         Response<DefaultRespEntity> response = new Response<DefaultRespEntity>();
         DefaultRespEntity defaultRespEntity = new DefaultRespEntity();
-        boolean  bool = loginDomain.passwdLogin(phone, passwd);
+        ResponseCode  responseCode= loginDomain.passwdLogin(phone, passwd);
 
         RespHeader respHeader = new RespHeader();
-        if(bool) {
+        if(responseCode == ResponseCode.OK) {
             Member member = memberService.selectOne(new EntityWrapper<Member>().eq("phone", phone));
             String jwt = JWTHelper.createJWT(member.getId().toString(), phone);
             respHeader.setToken(jwt);
+            defaultRespEntity.setIsSuccess("true");
         }
-
-        defaultRespEntity.setIsSuccess(""+bool);
         response.setRespBody(defaultRespEntity);
         response.setRespHeader(respHeader);
         return response;
@@ -175,13 +203,10 @@ public class LoginController {
         Member member = new Member();
         try {
             BeanUtils.copyProperties(member, memberReq);
-        } catch (IllegalAccessException e) {
-            logger.error("", e);
-        } catch (InvocationTargetException e) {
+        } catch (IllegalAccessException |InvocationTargetException e) {
             logger.error("", e);
         }
-        boolean bool = loginDomain.updateMember(member);
-
+        ResponseCode bool = loginDomain.updateMember(member);
         defaultRespEntity.setIsSuccess(""+bool);
         response.setRespBody(defaultRespEntity);
         return response;

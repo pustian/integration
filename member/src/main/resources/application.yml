@@ -8,7 +8,7 @@ server:
   # 对外提供的http超时时间设置
 spring:
   profiles:
-    active: dev
+    active: dev2
   application:
     name: member
 
