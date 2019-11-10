@@ -8,6 +8,10 @@
 		<result column="name" property="name" />
 		<result column="address" property="address" />
 		<result column="contact_info" property="contactInfo" />
+		<result column="score" property="score" />
+		<result column="pictureUrl" property="pictureUrl" />
+		<result column="instruction" property="instruction" />
+		<result column="contactName" property="contactName" />
 	</resultMap>
 
 </mapper>

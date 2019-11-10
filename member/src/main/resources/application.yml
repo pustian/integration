@@ -1,5 +1,5 @@
 server:
-  port: 8001
+  port: 8011
   # 最大连接数和最大并发数默认是10000和200
   tomcat:
     uri-encoding: UTF-8

@@ -36,6 +36,46 @@ public class Gym extends Model<Gym> {
 	@TableField("contact_info")
 	private String contactInfo;
 
+	private String score;
+
+	private String pictureUrl;
+
+	public String getPictureUrl() {
+		return pictureUrl;
+	}
+
+	public void setPictureUrl(String pictureUrl) {
+		this.pictureUrl = pictureUrl;
+	}
+
+	public String getScore() {
+		return score;
+	}
+
+	public void setScore(String score) {
+		this.score = score;
+	}
+
+	public String getInstruction() {
+		return instruction;
+	}
+
+	public void setInstruction(String instruction) {
+		this.instruction = instruction;
+	}
+
+	public String getContactName() {
+		return contactName;
+	}
+
+	public void setContactName(String contactName) {
+		this.contactName = contactName;
+	}
+
+	private String instruction;
+
+	private String contactName;
+
 
 	public Integer getId() {
 		return id;

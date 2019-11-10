@@ -1,6 +1,7 @@
 package com.wotung.integration.gym.web;
 
 import com.wotung.integration.gym.entity.Gym;
+import com.wotung.integration.gym.entity.TestInstructors;
 import com.wotung.integration.gym.service.impl.GymServiceImpl;
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
@@ -56,7 +57,6 @@ public class GymController {
 
     @PostMapping("/updateGym")
     @ResponseBody
-
     public  Response<DefaultRespEntity> updateGym(
             @RequestBody Request<GymReq> reqGym
     )
@@ -109,4 +109,13 @@ public class GymController {
         return ret;
     }
 
+    @GetMapping("/getAllInstructors")
+    public List<TestInstructors> getAllInstructors()
+    {
+        List Ret = new ArrayList();
+        TestInstructors instructor = new TestInstructors();
+
+        Ret.add(instructor);
+        return Ret;
+    }
 }

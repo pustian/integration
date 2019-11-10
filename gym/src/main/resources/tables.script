@@ -6,6 +6,10 @@ create table `gym` (
     `name` varchar(32) COMMENT '场馆名字',
     `address` varchar(200) COMMENT '场馆地址',
     `contact_info` varchar(32) COMMENT '联系方式',
+    `score` varchar(32) COMMENT '评分',
+    `pictureUrl` varchar(32) COMMENT '场馆图片的url',
+    `instruction` text COMMENT '场馆简介',
+    `contactName` varchar(32) COMMENT '联系人姓名',
     PRIMARY KEY  (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '场地基本信息';
 
