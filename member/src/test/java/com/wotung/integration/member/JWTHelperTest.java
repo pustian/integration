@@ -9,15 +9,15 @@ import java.security.Key;
 public class JWTHelperTest {
     @Test
     public void createJWT(){
-        String jwt = JWTHelper.createJWT("1", null);
+        String jwt = JWTHelper.createJWT("123", "田");
         System.out.println(jwt);
     }
 
     @Test
     public void parseJWT(){
         Claims claims = JWTHelper.parseJWT("eyJhbGciOiJIUzI1NiJ9" +
-                ".eyJqdGkiOiIxIiwiaXNzIjoibWVtYmVyIiwiaWF0IjoxNTcyODMzNTc2LCJleHAiOjE1NzI4MzM2MzZ9" +
-                ".KAyzFDrYZfVaaHihrK9UusistWEbLKua0H5ufl0jJiw");
+                ".eyJwaG9uZSI6IjEyMyIsIm5hbWUiOiLnlLAiLCJleHAiOjE1NzMyNDAyMDF9" +
+                ".e95XyGdVUypgs0ii13q95akAWKJFm5aoVUVA7Xnhg6I");
         System.out.println(claims);
     }
 

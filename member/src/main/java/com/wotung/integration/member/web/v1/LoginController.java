@@ -27,7 +27,7 @@ import java.lang.reflect.InvocationTargetException;
 
 @Api(tags = "用户注册登录")
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/member/")
 public class LoginController {
     private final static Logger logger = LoggerFactory.getLogger(Thread.currentThread().getStackTrace()[1].getClassName());
 
@@ -170,7 +170,7 @@ public class LoginController {
         RespHeader respHeader = new RespHeader();
         if(responseCode == ResponseCode.OK) {
             Member member = memberService.selectOne(new EntityWrapper<Member>().eq("phone", phone));
-            String jwt = JWTHelper.createJWT(member.getId().toString(), phone);
+            String jwt = JWTHelper.createJWT(phone, member.getName());
             respHeader.setToken(jwt);
             defaultRespEntity.setIsSuccess("true");
         }

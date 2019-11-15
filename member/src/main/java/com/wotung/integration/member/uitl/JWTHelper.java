@@ -19,11 +19,14 @@ public final class JWTHelper {
 
 
     //Sample method to construct a JWT
-    public static String createJWT(String memberId, String phone) {
-        return createJWT(memberId, Constants.SERVICE_NAME, phone, Constants.EXP_TTL_Millis);
+//    public static String createJWT(String phone) {
+//        return createJWT(Constants.SERVICE_NAME, null, phone, null, Constants.EXP_TTL_Millis);
+//    }
+    public static String createJWT(String phone, String name) {
+        return createJWT(Constants.SERVICE_NAME, null, phone, name, Constants.EXP_TTL_Millis);
     }
 
-    public static String createJWT(String id, String issuer, String subject, long ttlMillis) {
+    public static String createJWT(String issuer, String subject, String phone, String name, long ttlMillis) {
         //The JWT signature algorithm we will be using to sign the token
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
@@ -32,8 +35,9 @@ public final class JWTHelper {
         Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
 
 //        //Let's set the JWT Claims
-//        Map<String,Object> claims = new HashMap<String,Object>();//创建payload的私有声明（根据特定的业务需要添加，如果要拿这个做验证，一般是需要和jwt的接收方提前沟通好验证方式的）
-
+        Map<String,Object> claims = new HashMap<String,Object>();//创建payload的私有声明（根据特定的业务需要添加，如果要拿这个做验证，一般是需要和jwt的接收方提前沟通好验证方式的）
+        claims.put("phone", phone);
+        claims.put("name", name);
         //        iss: jwt签发者  // 签发模块
         //        sub: jwt所面向的用户 // phone
         //        aud: 接收jwt的一方
@@ -42,10 +46,11 @@ public final class JWTHelper {
         //                iat: jwt的签发时间
         long nowMillis = System.currentTimeMillis();
         Date now = new Date(nowMillis);
-        JwtBuilder builder = Jwts.builder().setId(id)
+        JwtBuilder builder = Jwts.builder() // .setId(id)
                 .setSubject(subject)
                 .setIssuer(issuer)
                 .setIssuedAt(now)
+                .setClaims(claims)
                 .signWith(signatureAlgorithm, signingKey);
 
         //if it has been specified, let's add the expiration
