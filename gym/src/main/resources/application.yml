@@ -1,5 +1,5 @@
 server:
-  port: 8001
+  port: 8002
   # 最大连接数和最大并发数默认是10000和200
   tomcat:
     uri-encoding: UTF-8
@@ -9,6 +9,6 @@ server:
 
 spring:
   profiles:
-    active: dev
+    active: prod
   application:
     name: gym

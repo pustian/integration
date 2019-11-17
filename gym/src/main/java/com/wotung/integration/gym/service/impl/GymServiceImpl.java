@@ -25,13 +25,19 @@ public class GymServiceImpl extends ServiceImpl<GymMapper, Gym> implements IGymS
     IGymService gymService;
 
     @Override
-    public Boolean add(String name,String address,String contact_info)
+    public Boolean add(String name,String address,String contact_info,
+                        String score,String pictureUrl,String instruction,
+                       String contactname)
     {
         Boolean result = false;
         Gym gym = new Gym();
         gym.setAddress(address);
         gym.setName(name);
         gym.setContactInfo(contact_info);
+        gym.setContactName(contactname);
+        gym.setScore(score);
+        gym.setPictureUrl(pictureUrl);
+        gym.setInstruction(instruction);
 
         Gym selected = gymService.selectOne(new EntityWrapper<Gym>(gym));
 

@@ -14,7 +14,9 @@ import java.util.List;
  * @since 2019-11-03
  */
 public interface IGymService extends IService<Gym> {
-    Boolean add(String name,String adress,String contact_info);
+    Boolean add(String name,String address,String contact_info,
+                String score,String pictureUrl,String instruction,
+                String contactname);
 
     Boolean update (Gym gym);
 

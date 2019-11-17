@@ -30,7 +30,7 @@ import java.util.List;
  */
 @Controller
 @RestController
-@RequestMapping("/gym")
+@RequestMapping("/api/v1/gym")
 public class GymController {
 
     private final static Logger logger = LoggerFactory.getLogger(Thread.currentThread().getStackTrace()[1].getClassName());
@@ -44,11 +44,15 @@ public class GymController {
     public Response<DefaultRespEntity> add(
             @RequestParam(name = "name")String name,
             @RequestParam(name = "address")String address,
-            @RequestParam(name = "contactinfo")String contactinfo
+            @RequestParam(name = "contactinfo")String contactinfo,
+            @RequestParam(name = "score")String score,
+            @RequestParam(name = "pictureurl")String pictureUrl,
+            @RequestParam(name = "instruction")String instruction,
+            @RequestParam(name = "contactname")String contactname
     ) {
         Response<DefaultRespEntity> response = new Response<DefaultRespEntity>();
         DefaultRespEntity defaultRespEntity = new DefaultRespEntity();
-        boolean  bool = gymServiceImp.add(name,address,contactinfo);
+        boolean  bool = gymServiceImp.add(name,address,contactinfo,score,pictureUrl,instruction,contactname);
         defaultRespEntity.setIsSuccess(""+bool);
         response.setRespBody(defaultRespEntity);
         return response;
@@ -58,21 +62,21 @@ public class GymController {
     @PostMapping("/updateGym")
     @ResponseBody
     public  Response<DefaultRespEntity> updateGym(
-            @RequestBody Request<GymReq> reqGym
+            @RequestBody Gym reqGym
     )
     {
         Response<DefaultRespEntity> response = new Response<DefaultRespEntity>();
         DefaultRespEntity defaultRespEntity = new DefaultRespEntity();
 
-       GymReq gymReq = reqGym.getReqBody();
-        Gym gym = new Gym();
-        try {
+      // GymReq gymReq = reqGym;
+        Gym gym = reqGym;
+       /* try {
             BeanUtils.copyProperties(gym, gymReq);
         } catch (IllegalAccessException e) {
             logger.error("", e);
         } catch (InvocationTargetException e) {
             logger.error("", e);
-        }
+        }*/
         boolean bool = gymServiceImp.update(gym);
 
         defaultRespEntity.setIsSuccess(""+bool);
@@ -84,14 +88,14 @@ public class GymController {
     @PostMapping("/delete")
     @ResponseBody
     public  Response<DefaultRespEntity> deleteGym(
-            @RequestBody Request<GymReq> reqGym
+            @RequestParam(name = "gymId")Integer reqGymId
     ) {
         Response<DefaultRespEntity> response = new Response<DefaultRespEntity>();
         DefaultRespEntity defaultRespEntity = new DefaultRespEntity();
 
-        GymReq gymReq = reqGym.getReqBody();
+       // GymReq gymReq = reqGym.getReqBody();
         Gym gym = new Gym();
-        gym.setId(gymReq.getId() );
+        gym.setId(reqGymId);
         //member.setIsDeleted(1);
         boolean bool = gymServiceImp.deleteById(gym);
 
@@ -109,13 +113,8 @@ public class GymController {
         return ret;
     }
 
-    @GetMapping("/getAllInstructors")
-    public List<TestInstructors> getAllInstructors()
-    {
-        List Ret = new ArrayList();
-        TestInstructors instructor = new TestInstructors();
 
-        Ret.add(instructor);
-        return Ret;
+
+
+
     }
-}
