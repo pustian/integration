@@ -1,8 +1,12 @@
 package com.wotung.integration.gym.web;
 
+
+import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.wotung.integration.gym.entity.Gym;
 import com.wotung.integration.gym.entity.TestInstructors;
 import com.wotung.integration.gym.service.impl.GymServiceImpl;
+import com.wotung.integration.gym.web.vo.ResposePageInfo;
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import com.wotung.integration.gym.web.vo.DefaultRespEntity;
+import com.wotung.integration.gym.web.vo.QueryRespEntity;
 import com.wotung.integration.gym.web.vo.Request;
 import com.wotung.integration.gym.web.vo.Response;
 import com.wotung.integration.gym.web.vo.header.RespHeader;
@@ -52,9 +57,15 @@ public class GymController {
     ) {
         Response<DefaultRespEntity> response = new Response<DefaultRespEntity>();
         DefaultRespEntity defaultRespEntity = new DefaultRespEntity();
-        boolean  bool = gymServiceImp.add(name,address,contactinfo,score,pictureUrl,instruction,contactname);
+        ResponseCode  bool = gymServiceImp.add(name,address,contactinfo,score,pictureUrl,instruction,contactname);
         defaultRespEntity.setIsSuccess(""+bool);
         response.setRespBody(defaultRespEntity);
+
+        RespHeader respHeader = new RespHeader();
+        respHeader.setRespCode(bool.code);
+        respHeader.setRespMessage(bool.message);
+        response.setRespHeader(respHeader);
+
         return response;
     }
 
@@ -70,17 +81,16 @@ public class GymController {
 
       // GymReq gymReq = reqGym;
         Gym gym = reqGym;
-       /* try {
-            BeanUtils.copyProperties(gym, gymReq);
-        } catch (IllegalAccessException e) {
-            logger.error("", e);
-        } catch (InvocationTargetException e) {
-            logger.error("", e);
-        }*/
-        boolean bool = gymServiceImp.update(gym);
+
+        ResponseCode bool = gymServiceImp.update(gym);
 
         defaultRespEntity.setIsSuccess(""+bool);
         response.setRespBody(defaultRespEntity);
+
+        RespHeader respHeader = new RespHeader();
+        respHeader.setRespCode(bool.code);
+        respHeader.setRespMessage(bool.message);
+        response.setRespHeader(respHeader);
         return response;
     }
 
@@ -97,10 +107,15 @@ public class GymController {
         Gym gym = new Gym();
         gym.setId(reqGymId);
         //member.setIsDeleted(1);
-        boolean bool = gymServiceImp.deleteById(gym);
+        ResponseCode bool = gymServiceImp.delete(gym);
 
         defaultRespEntity.setIsSuccess(""+bool);
         response.setRespBody(defaultRespEntity);
+
+        RespHeader respHeader = new RespHeader();
+        respHeader.setRespCode(bool.code);
+        respHeader.setRespMessage(bool.message);
+        response.setRespHeader(respHeader);
         return response;
     }
 
@@ -115,6 +130,28 @@ public class GymController {
 
 
 
+
+    @PostMapping("/getGymByPage")
+    public Response<QueryRespEntity>  getGymByPage(
+                                @RequestParam(name = "pagenum")Integer Pagenum,
+                                @RequestParam(name = "pagesize")Integer PageSize,
+                                @RequestParam(name = "name")String Name
+                                )
+    {
+        Response<QueryRespEntity> response = new Response<QueryRespEntity>();
+
+        QueryRespEntity queryRespEntity  = gymServiceImp.getGymbyPage(Pagenum,PageSize,Name);
+
+
+        response.setRespBody(queryRespEntity);
+
+        RespHeader respHeader = new RespHeader();
+        respHeader.setRespCode(ResponseCode.OK.code);
+        respHeader.setRespMessage(ResponseCode.OK.message);
+        response.setRespHeader(respHeader);
+        return response;
+
+    }
 
 
     }

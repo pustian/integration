@@ -1,7 +1,7 @@
 package com.wotung.integration.gym.web;
 
 public enum ResponseCode {
-    OK          ("000000", "OK"),
+    OK          ("200", "OK"),
     SYSTEM_ERROR("999999", "System error"),
     TOKEN_ERROR ("990001", "TOKEN ERROR"),
     // 注册
