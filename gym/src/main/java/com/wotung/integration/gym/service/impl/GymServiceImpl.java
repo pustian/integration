@@ -52,16 +52,14 @@ public class GymServiceImpl extends ServiceImpl<GymMapper, Gym> implements IGymS
         if(selected == null)
         {
             result = gymService.insert(gym);
+            resultcode = ResponseCode.OK;
         }
         else
         {
             result = true;
+            resultcode = ResponseCode.ADD_ERROR;
         }
 
-        if(result == true)
-        {
-            resultcode = ResponseCode.OK;
-        }
         return resultcode;
     }
 

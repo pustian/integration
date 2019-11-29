@@ -49,11 +49,11 @@ public class GymController {
     public Response<DefaultRespEntity> add(
             @RequestParam(name = "name")String name,
             @RequestParam(name = "address")String address,
-            @RequestParam(name = "contactinfo")String contactinfo,
+            @RequestParam(name = "contactInfo")String contactinfo,
             @RequestParam(name = "score")String score,
-            @RequestParam(name = "pictureurl")String pictureUrl,
+            @RequestParam(name = "pictureUrl")String pictureUrl,
             @RequestParam(name = "instruction")String instruction,
-            @RequestParam(name = "contactname")String contactname
+            @RequestParam(name = "contactName")String contactname
     ) {
         Response<DefaultRespEntity> response = new Response<DefaultRespEntity>();
         DefaultRespEntity defaultRespEntity = new DefaultRespEntity();

@@ -7,7 +7,7 @@ create table `gym` (
     `address` varchar(200) COMMENT '场馆地址',
     `contact_info` varchar(32) COMMENT '联系方式',
     `score` varchar(32) COMMENT '评分',
-    `pictureUrl` varchar(32) COMMENT '场馆图片的url',
+    `pictureUrl` varchar(255) COMMENT '场馆图片的url',
     `instruction` text COMMENT '场馆简介',
     `contactName` varchar(32) COMMENT '联系人姓名',
     PRIMARY KEY  (`id`)

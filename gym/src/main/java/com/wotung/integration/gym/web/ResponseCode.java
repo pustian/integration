@@ -5,7 +5,7 @@ public enum ResponseCode {
     SYSTEM_ERROR("999999", "System error"),
     TOKEN_ERROR ("990001", "TOKEN ERROR"),
     // 注册
-    ADD_ERROR("001001001", "场馆已经添加"),
+    ADD_ERROR("001001001", "场馆已经存在"),
 
     // 登录
     LOGIN_FAILED("002001001", "用户或密码错误"),
