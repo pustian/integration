@@ -40,6 +40,8 @@ public class Gym extends Model<Gym> {
 
 	private String pictureUrl;
 
+	private int Is_Delete;
+
 	public String getPictureUrl() {
 		return pictureUrl;
 	}
@@ -107,6 +109,14 @@ public class Gym extends Model<Gym> {
 
 	public void setContactInfo(String contactInfo) {
 		this.contactInfo = contactInfo;
+	}
+
+	public int getIs_Delete() {
+		return Is_Delete;
+	}
+
+	public void setIs_Delete(int is_Delete) {
+		Is_Delete = is_Delete;
 	}
 
 	@Override

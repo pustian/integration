@@ -120,6 +120,28 @@ public class GymController {
     }
 
 
+
+    @PostMapping("/deleteBylogic")
+    @ResponseBody
+    public  Response<DefaultRespEntity> deleteGymByLogic(
+            @RequestParam(name = "gymId")Integer reqGymId
+    ) {
+        Response<DefaultRespEntity> response = new Response<DefaultRespEntity>();
+        DefaultRespEntity defaultRespEntity = new DefaultRespEntity();
+
+        ResponseCode bool = gymServiceImp.delete(reqGymId);
+
+        defaultRespEntity.setIsSuccess(""+bool);
+        response.setRespBody(defaultRespEntity);
+
+        RespHeader respHeader = new RespHeader();
+        respHeader.setRespCode(bool.code);
+        respHeader.setRespMessage(bool.message);
+        response.setRespHeader(respHeader);
+        return response;
+    }
+
+
     @GetMapping("/getAllGym")
     public List<Gym>  getAllGym(){
 

@@ -9,6 +9,6 @@ server:
 
 spring:
   profiles:
-    active: prod
+    active: dev2
   application:
     name: gym

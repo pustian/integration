@@ -27,6 +27,8 @@ public interface IGymService extends IService<Gym> {
 
     ResponseCode delete (Gym gym);
 
+    public  ResponseCode delete (Integer id);
+
     List<Gym>  getAllGym();
 
     QueryRespEntity getGymbyPage(Integer Pagenum, Integer PageSize, String Name);

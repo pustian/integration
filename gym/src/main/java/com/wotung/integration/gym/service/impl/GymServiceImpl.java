@@ -47,11 +47,25 @@ public class GymServiceImpl extends ServiceImpl<GymMapper, Gym> implements IGymS
         gym.setPictureUrl(pictureUrl);
         gym.setInstruction(instruction);
 
+        gym.setIs_Delete(0);
+
         Gym selected = gymService.selectOne(new EntityWrapper<Gym>(gym));
 
         if(selected == null)
         {
-            result = gymService.insert(gym);
+            gym.setIs_Delete(1);
+            Gym selected1 = gymService.selectOne(new EntityWrapper<Gym>(gym));
+            if(selected1 == null)
+            {
+                gym.setIs_Delete(0);
+                result = gymService.insert(gym);
+            }
+            else
+            {
+                selected1.setIs_Delete(0);
+                result = gymService.updateById(selected1);
+            }
+
             resultcode = ResponseCode.OK;
         }
         else
@@ -96,9 +110,27 @@ public class GymServiceImpl extends ServiceImpl<GymMapper, Gym> implements IGymS
     }
 
     @Override
+    public  ResponseCode delete (Integer id)
+    {
+        ResponseCode responseCode = ResponseCode.SYSTEM_ERROR;
+        boolean result = false;
+        EntityWrapper <Gym> entityWrapper = new EntityWrapper<Gym>();
+        entityWrapper.eq("id",id);
+        Gym selected = gymService.selectOne(entityWrapper);
+        if(selected != null)
+        {
+            selected.setIs_Delete(1);
+            gymService.update(selected);
+            responseCode = responseCode.OK;
+        }
+        return responseCode;
+    }
+    @Override
     public List<Gym> getAllGym()
     {
-        return gymService.selectList(null);
+        EntityWrapper<Gym> wrapper = (EntityWrapper<Gym>) new EntityWrapper<Gym>().eq("Is_Delete",0);
+
+        return gymService.selectList(wrapper);
     }
 
     @Override
@@ -111,7 +143,7 @@ public class GymServiceImpl extends ServiceImpl<GymMapper, Gym> implements IGymS
         {
             Gym gym = new Gym();
             gym.setName(Name);
-            EntityWrapper<Gym> wrapper = (EntityWrapper<Gym>) new EntityWrapper<Gym>().like("name", gym.getName());
+            EntityWrapper<Gym> wrapper = (EntityWrapper<Gym>) new EntityWrapper<Gym>().like("name", gym.getName()).eq("Is_Delete",0);
 
             page = gymService.selectPage(page,wrapper);
 

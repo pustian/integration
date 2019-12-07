@@ -12,6 +12,7 @@
 		<result column="pictureUrl" property="pictureUrl" />
 		<result column="instruction" property="instruction" />
 		<result column="contactName" property="contactName" />
+		<result column="Is_Delete" property="Is_Delete" />
 	</resultMap>
 
 </mapper>
